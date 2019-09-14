@@ -1,0 +1,29 @@
+<%- include('../includes/header.ejs')  %>
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+  <%- include('../includes/navigation.ejs')  %>
+  <main>
+    <h1><%= docTitle %></h1>
+    
+    <header class="card__header">
+      <h1 class="product__title">User: <%= email %></h1>
+    </header>
+    <hr />
+    <div class="card__content">
+      <h2 class="product__price">Total Price: $<%= totalPrice %></h2>
+      <p class="product__description">Total Items: <%= totalItems %></p>
+    </div>
+    <div class="card__actions">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="button" class="btn" id="stripePaymentButton"
+        checkoutSessionId="<%= checkoutSessionId %>" onclick="checkoutWithStripe(this)" disabled>Redirecting to Stripe Payments</button>
+
+        <a type="button" class="btn" id="cancelButton" href="/cart">Cancel Payment</a>
+    </div>
+  </main>
+
+  <%- include('../includes/footer.ejs')  %>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="/js/checkout.js"></script>

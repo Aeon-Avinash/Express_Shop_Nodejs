@@ -1,0 +1,49 @@
+<%- include('../includes/header.ejs')  %>
+<link rel="stylesheet" href="/css/forms.css">
+<link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs')  %>
+    <main>
+        <h1><%= docTitle %></h1>
+
+        <% if(errorMessage && errorMessage.length !== 0)  { %>
+        <div class="user-message user-message--error"><%= errorMessage %></div>
+        <% } %>
+        <% if(confirmMessage && confirmMessage.length !== 0)  { %>
+        <div class="user-message user-message--error"><%= confirmMessage %></div>
+        <% } %>
+
+        <form class="login-form" 
+            action="/reset/<%= errorMessage && (errorMessage.length !== 0) ? prevInput.resetToken : resetToken %>"
+            method="POST"
+        >
+            <div class="form-control">
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" readonly
+                    value="<%= errorMessage && (errorMessage.length !== 0) ? prevInput.email : email %>"
+                /> 
+            </div>
+            <div class="form-control">
+                <label for="newPassword">New Password</label>
+                <input type="password" name="newPassword" id="newPassword" 
+                value="<%= errorMessage && (errorMessage.length !== 0) ? prevInput.newPassword : '' %>" 
+                class="<%= validationErrors.find(err => err.param === 'newPassword') ? 'invalid' : '' %>"
+                />
+            </div>
+            <div class="form-control">
+                <label for="confirmNewPassword">Confirm New Password</label>
+                <input type="password" name="confirmNewPassword" id="confirmNewPassword" 
+                value="<%= errorMessage && (errorMessage.length !== 0) ? prevInput.confirmNewPassword : '' %>" 
+                class="<%= validationErrors.find(err => err.param === 'confirmNewPassword') ? 'invalid' : '' %>"
+                />
+            </div>
+            <input type="hidden" name="userId" value="<%= errorMessage && (errorMessage.length !== 0) ? prevInput.userId : userId %>" />
+            <input type="hidden" name="resetToken" value="<%= errorMessage && (errorMessage.length !== 0) ? prevInput.resetToken : resetToken %>" />
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button class="btn" type="submit">Update Password</button>
+        </form>
+    </main>
+
+    <%- include('../includes/footer.ejs')  %>

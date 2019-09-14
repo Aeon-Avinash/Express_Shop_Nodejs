@@ -1,0 +1,49 @@
+<%- include('../includes/header.ejs')  %>
+  <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+  <%- include('../includes/navigation.ejs')  %>
+  <main>
+    <h1><%= docTitle %></h1>
+
+    <% if(confirmMessage && confirmMessage.length !== 0)  { %>
+    <div class="user-message"><%= confirmMessage %></div>
+    <% } %>
+
+    <% if(products.length > 0) { %>
+    <div class="grid">
+      <% products.forEach(product => { %>
+      <article class="card product-item">
+        <header class="card__header">
+          <h1 class="product__title"><%= product.title %></h1>
+        </header>
+        <div class="card__image">
+          <% if(product.imageUrl) { %>
+          <img src="<%= product.imageUrl %>" alt="<%= product.title %>" />
+          <% } else { %>
+          <img src="https://source.unsplash.com/800x600/?$ <%= product.title %>" alt="<%= product.title %>" />
+          <% } %>
+        </div>
+        <div class="card__content">
+          <h2 class="product__price">$<%= product.price %></h2>
+          <p class="product__description"><%= product.description %></p>
+        </div>
+        <div class="card__actions">
+          <a href="/products/<%= product._id %>" id="detailsBtn" class="btn">Details</a>
+          <form action="/cart/<%= product._id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button class="btn"><%=isAuthenticated ? "Add to Cart" : "Login to add to your Cart" %></button>
+          </form>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+    <%- include('../includes/pagination.ejs', {prevPage: prevPage, currentPage: currentPage, nextPage: nextPage} ) %>
+    <% } else { %>
+    <h1>No Products</h1>
+    <p>Please <a href="admin/add-product">add products</a></p>
+    <% } %>
+  </main>
+
+  <%- include('../includes/footer.ejs')  %>

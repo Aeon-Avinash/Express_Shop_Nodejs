@@ -1,0 +1,65 @@
+<%- include('../includes/header.ejs')  %>
+  <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+  <%- include('../includes/navigation.ejs')  %>
+  <main>
+    <h1><%= docTitle %></h1>
+
+    <% if(errorMessage && errorMessage.length !== 0)  { %>
+    <div class="user-message user-message--error"><%= errorMessage %></div>
+    <% } %>
+
+    <% if(items.length > 0) { %>
+    <h4>Cart Items: <%= totalItems %></h4>
+    <h4>Cart Total: <%= totalPrice.toFixed(2) %>$</h4>
+    <div class="grid">
+      <% items.forEach(item => { %>
+      <article class="card product-item">
+        <header class="card__header">
+          <h1 class="product__title"><%= item.product.title %></h1>
+        </header>
+        <div class="card__image">
+          <% if(item.product.imageUrl) { %>
+          <img src="<%= item.product.imageUrl %>" alt="<%= item.product.title %>" />
+          <% } else { %>
+          <img src="https://source.unsplash.com/800x600/?$ <%= item.product.title %>" alt="<%= item.product.title %>" />
+          <% } %>
+        </div>
+        <div class="card__content">
+          <h2 class="product__price">$<%= item.product.price %></h2>
+          <p class="product__description"><%= item.product.description %></p>
+        </div>
+        <div class="card__options">
+          <form action="/cart-decrease/<%= item.product._id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" id="decreaseBtn" class="btn">-</button>
+          </form>
+          <h4 class="product__price">Quantity: <%= item.quantity %></h4>
+          <form action="/cart-increase/<%= item.product._id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" id="increaseBtn" class="btn">+</button>
+          </form>
+        </div>
+        <div class="card__options">
+          <form action="/cart-remove/<%= item.product._id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" id="removeBtn" class="btn">Remove from Cart</button>
+          </form>
+          <!-- <form action="/orders" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" id="checkoutBtn" class="btn">Checkout Now!</button>
+          </form> -->
+          <a type="button" id="checkoutBtn" class="btn" href="/checkout">Checkout Now!</a>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+    <% } else { %>
+    <h1>No Items in the cart</h1>
+    <p>Please <a href="/products">add items</a></p>
+    <% } %>
+  </main>
+
+  <%- include('../includes/footer.ejs')  %>
